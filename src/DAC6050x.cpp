@@ -105,7 +105,6 @@ uint8_t DAC6050x::begin(void) {
         // allow the DAC to complete reset
         delayMicroseconds(100);
         // configure the gain, default after reset is 2
-        uint16_t 
         if(_gain == 1) {
             result = write_register((uint8_t)GAIN_CMD,
                         (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
@@ -130,7 +129,7 @@ uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
     // Test if channel is within the range obtained from the DEVICE_ID command,
     // read when we called the begin() function.
     if(channel > _num_channels) {
-        return == 0xFF;
+        return 0xFF;
     } 
     
     // Test if the value exceeds the range allowed by the resolution obtained
