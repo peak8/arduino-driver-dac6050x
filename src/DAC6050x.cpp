@@ -28,7 +28,7 @@
 #define DEVICE_ID_RSTSEL_SHIFT          7
 
 #define GAIN_BUFF_GAIN_1                0x0000
-#define GAIN_BUFF_GAIN_2                0x0001
+#define GAIN_BUFF_GAIN_2                0x00FF
 #define GAIN_REF_DIV_BY_2               0x0100
 #define TRIGGER_SOFT_RESET              0x000A
 
