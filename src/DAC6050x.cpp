@@ -65,7 +65,7 @@ uint16_t DAC6050x::read_register(uint8_t command) {
     return val;
 }
 
-uint8_t DAC6050x::write_register(uint8_t command, uint16_t value) {
+uint16_t DAC6050x::write_register(uint8_t command, uint16_t value) {
     _wire->beginTransmission(_address);
     _wire->write(command);
     _wire->write((uint8_t)(value >> 8));
@@ -92,8 +92,8 @@ DAC6050x::~DAC6050x() {
     _wire = nullptr;
 }
 
-uint8_t DAC6050x::begin(void) {
-    uint8_t result;
+uint16_t DAC6050x::self_test(void) {
+    uint16_t result;
 
     _wire->begin();
     _wire->setClock(_I2Cspeed);
@@ -114,8 +114,12 @@ uint8_t DAC6050x::begin(void) {
     if(result == 0) {
         // read the device ID register and get the resolution and number of channels.
         uint16_t device_id_reg = read_register(DEVICE_ID_CMD);
-        _resolution = (uint8_t)((device_id_reg & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
-        _num_channels = (uint8_t)((device_id_reg & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
+        if(device_id_reg > 0) {
+            _resolution = (uint8_t)((device_id_reg & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
+            _num_channels = (uint8_t)((device_id_reg & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
+        } else {
+            result = __LINE__;
+        }
     }
 
     _wire->end();

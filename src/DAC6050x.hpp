@@ -27,7 +27,7 @@ private:
     uint8_t _num_channels;
     
     uint16_t read_register(uint8_t command);
-    uint8_t write_register(uint8_t command, uint16_t value);
+    uint16_t write_register(uint8_t command, uint16_t value);
 
 public:
     /**
@@ -52,7 +52,7 @@ public:
      * 
      * @return 0 = success, see Wire endTransmission() doc for error codes
      */
-    uint8_t begin(void);
+    uint16_t self_test(void);
 
     /**
      * @brief Set the DAC output voltage.
