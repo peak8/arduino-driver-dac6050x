@@ -70,7 +70,7 @@ uint16_t DAC6050x::write_register(uint8_t command, uint16_t value) {
     _wire->write(command);
     _wire->write((uint8_t)(value >> 8));
     _wire->write((uint8_t)(value & 0xFF));
-    return (_wire->endTransmission() == 0);
+    return _wire->endTransmission();
 }
 
 
