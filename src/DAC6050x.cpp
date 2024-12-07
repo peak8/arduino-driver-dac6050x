@@ -125,7 +125,7 @@ uint16_t DAC6050x::self_test(void) {
             fake_result |= 8;
             _resolution = (uint8_t)((device_id_reg & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
             _num_channels = (uint8_t)((device_id_reg & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
-            fake_result = device_id_reg;
+            fake_result = device_id_reg;  // comment this to see bit mask
         } else {
             fake_result |= 16;
             result = __LINE__;
@@ -134,7 +134,7 @@ uint16_t DAC6050x::self_test(void) {
 
     _wire->end();
     
-    return fake_result;
+    return result;
 }
 
 uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
