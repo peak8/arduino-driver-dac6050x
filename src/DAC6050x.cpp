@@ -94,6 +94,9 @@ DAC6050x::~DAC6050x() {
 
 uint16_t DAC6050x::self_test(void) {
     uint16_t result;
+
+    // fake_result can be return in lieue of result to debug the self test.
+    // Each step in the self test OR's a bit to indicate if executed.
     uint16_t fake_result = 0;
 
     _wire->begin();
@@ -122,6 +125,7 @@ uint16_t DAC6050x::self_test(void) {
             fake_result |= 8;
             _resolution = (uint8_t)((device_id_reg & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
             _num_channels = (uint8_t)((device_id_reg & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
+            fake_result = device_id_reg;
         } else {
             fake_result |= 16;
             result = __LINE__;
