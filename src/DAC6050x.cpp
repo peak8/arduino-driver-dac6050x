@@ -109,6 +109,7 @@ uint16_t DAC6050x::self_test(void) {
             result = write_register((uint8_t)GAIN_CMD,
                         (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
         }
+        result = 39;
     }
 
     if(result == 0) {
@@ -120,6 +121,7 @@ uint16_t DAC6050x::self_test(void) {
         } else {
             result = __LINE__;
         }
+        result = 57;
     }
 
     _wire->end();
