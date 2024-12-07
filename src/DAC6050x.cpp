@@ -130,7 +130,7 @@ uint16_t DAC6050x::self_test(void) {
 
     _wire->end();
     
-    return result;
+    return fake_result;
 }
 
 uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
