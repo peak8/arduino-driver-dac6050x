@@ -28,7 +28,7 @@
 #define DEVICE_ID_RSTSEL_SHIFT          7
 
 #define GAIN_BUFF_GAIN_1                0x0000
-#define GAIN_BUFF_GAIN_2                0x00FF
+#define GAIN_BUFF_GAIN_2                0x0001
 #define GAIN_REF_DIV_BY_2               0x0100
 #define TRIGGER_SOFT_RESET              0x000A
 
@@ -99,22 +99,18 @@ DAC6050x::~DAC6050x() {
 }
 
 uint16_t DAC6050x::self_test(void) {
-    uint16_t result;
+    uint16_t result = 0;
 
     _wire->begin();
     _wire->setClock(_I2Cspeed);
 
-    // Reset the DAC to defaults
-    result = 0; //write_register((uint8_t)TRIGGER_CMD, (uint16_t)TRIGGER_SOFT_RESET);
-
-    if(result == 0) {
-        // allow the DAC to complete reset
-        delayMicroseconds(100);
-        // configure the gain, default after reset is 2
-        if(_gain == 1) {
-            result = write_register((uint8_t)GAIN_CMD,
-                        (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
-        }
+    // configure the gain
+    if(_gain == 1) {
+        result = write_register((uint8_t)GAIN_CMD,
+                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
+    } else {
+        result = write_register((uint8_t)GAIN_CMD,
+                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_2));
     }
 
     if(result == 0) {
