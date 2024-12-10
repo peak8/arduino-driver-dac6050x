@@ -60,6 +60,7 @@ uint16_t DAC6050x::read_register(uint8_t command) {
     if(available == 2) {
         val = _wire->read() << 8;
         val |= _wire->read();
+        val = 0xFFF0;
     } else if(available == 0) {
         val = 0xFFFF;
     } else {
