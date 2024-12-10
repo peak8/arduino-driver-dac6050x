@@ -86,7 +86,7 @@ DAC6050x::DAC6050x(const uint8_t address,
     // init with 12-bit and 1 channel. Will be update by begin().
     _resolution = (uint8_t)RESOLUTION_12_BIT;
     _num_channels = (uint8_t)NUM_CHANNELS_1;
-    _device_id = 0;
+    _device_id = 0xFFFF;
 }
 
 DAC6050x::~DAC6050x() {
