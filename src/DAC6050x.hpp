@@ -25,6 +25,7 @@ private:
     uint8_t _gain;
     uint8_t _resolution;
     uint8_t _num_channels;
+    uint16_t _device_id;
     
     uint16_t read_register(uint8_t command);
     uint16_t write_register(uint8_t command, uint16_t value);
@@ -65,6 +66,13 @@ public:
      * doc for other error codes.
      */
     uint8_t set_dac_output(uint16_t value, uint8_t channel = 0);
+
+    /**
+     * @brief Get the device id that was read during self-test
+     * 
+     * @return uint16_t device ID
+     */
+    uint16_t get_device_id(void);
 
 };
 

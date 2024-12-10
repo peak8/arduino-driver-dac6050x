@@ -86,6 +86,7 @@ DAC6050x::DAC6050x(const uint8_t address,
     // init with 12-bit and 1 channel. Will be update by begin().
     _resolution = (uint8_t)RESOLUTION_12_BIT;
     _num_channels = (uint8_t)NUM_CHANNELS_1;
+    _device_id = 0;
 }
 
 DAC6050x::~DAC6050x() {
@@ -94,10 +95,6 @@ DAC6050x::~DAC6050x() {
 
 uint16_t DAC6050x::self_test(void) {
     uint16_t result;
-
-    // fake_result can be return in lieue of result to debug the self test.
-    // Each step in the self test OR's a bit to indicate if executed.
-    uint16_t fake_result = 0;
 
     _wire->begin();
     _wire->setClock(_I2Cspeed);
@@ -108,26 +105,21 @@ uint16_t DAC6050x::self_test(void) {
     if(result == 0) {
         // allow the DAC to complete reset
         delayMicroseconds(100);
-        fake_result = 1;
         // configure the gain, default after reset is 2
         if(_gain == 1) {
             result = write_register((uint8_t)GAIN_CMD,
                         (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
-            fake_result |= 2;
         }
     }
 
     if(result == 0) {
         // read the device ID register and get the resolution and number of channels.
-        fake_result |= 4;
-        uint16_t device_id_reg = read_register(DEVICE_ID_CMD);
-        if(device_id_reg > 0) {
+        _device_id = read_register(DEVICE_ID_CMD);
+        if(_device_id > 0) {
             fake_result |= 8;
-            _resolution = (uint8_t)((device_id_reg & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
-            _num_channels = (uint8_t)((device_id_reg & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
-            fake_result = device_id_reg;  // comment this to see bit mask
+            _resolution = (uint8_t)((_device_id & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
+            _num_channels = (uint8_t)((_device_id & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
         } else {
-            fake_result |= 16;
             result = __LINE__;
         }
     }
