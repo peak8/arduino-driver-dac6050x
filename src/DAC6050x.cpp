@@ -60,7 +60,7 @@ uint16_t DAC6050x::read_register(uint8_t command) {
     if(available == 2) {
         val = _wire->read() << 8;
         val |= _wire->read();
-        val = 0xFFF0;
+        // val = 0xFFF0;
     } else if(available == 0) {
         val = 0xFFFF;
     } else {
@@ -105,7 +105,7 @@ uint16_t DAC6050x::self_test(void) {
     _wire->setClock(_I2Cspeed);
 
     // Reset the DAC to defaults
-    result = write_register((uint8_t)TRIGGER_CMD, (uint16_t)TRIGGER_SOFT_RESET);
+    result = 0; //write_register((uint8_t)TRIGGER_CMD, (uint16_t)TRIGGER_SOFT_RESET);
 
     if(result == 0) {
         // allow the DAC to complete reset
