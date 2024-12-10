@@ -116,7 +116,6 @@ uint16_t DAC6050x::self_test(void) {
         // read the device ID register and get the resolution and number of channels.
         _device_id = read_register(DEVICE_ID_CMD);
         if(_device_id > 0) {
-            fake_result |= 8;
             _resolution = (uint8_t)((_device_id & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
             _num_channels = (uint8_t)((_device_id & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
         } else {
