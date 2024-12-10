@@ -156,3 +156,7 @@ uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
     
     return result;
 }
+
+ uint16_t DAC6050x::get_device_id(void) {
+    return _device_id;
+ }
