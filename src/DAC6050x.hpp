@@ -59,13 +59,12 @@ public:
      * @brief Set the DAC output voltage.
      * 
      * @param value DAC counts between the min/max of the resolution
-     * @param channel integer from 0 up to 7, can be ignored for the DACx0501
-     * familay of DAC's
+     * @param channel integer values 1 through 8
      * 
      * @return 0 = success, FF - parameter error, see Wire endTransmission()  
      * doc for other error codes.
      */
-    uint8_t set_dac_output(uint16_t value, uint8_t channel = 0);
+    uint8_t set_dac_output(uint16_t value, uint8_t channel = 1);
 
     /**
      * @brief Get the device id that was read during self-test

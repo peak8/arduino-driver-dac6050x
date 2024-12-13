@@ -71,10 +71,14 @@ uint16_t DAC6050x::read_register(uint8_t command) {
 }
 
 uint16_t DAC6050x::write_register(uint8_t command, uint16_t value) {
+    // value is limited to the range of a 12 bit number but 16 bits is transmitted
+    // and the msb of the value needs to be shifted to the msb of the 16-bit command
+    // bytes
+    uint16_t temp_val = value << 4;
     _wire->beginTransmission(_address);
     _wire->write(command);
-    _wire->write((uint8_t)(value >> 8));
-    _wire->write((uint8_t)(value & 0xFF));
+    _wire->write((uint8_t)(temp_val >> 8));
+    _wire->write((uint8_t)(temp_val & 0xFF));
     return _wire->endTransmission();
 }
 
@@ -88,8 +92,8 @@ DAC6050x::DAC6050x(const uint8_t address,
     _wire = wire;
     _I2Cspeed = speed;
     _gain = gain;
-    // init with 12-bit and 1 channel. Will be update by begin().
     _resolution = (uint8_t)RESOLUTION_12_BIT;
+    // init with 1 channel. Will be updated by self_test().
     _num_channels = (uint8_t)NUM_CHANNELS_1;
     _device_id = 0xFFFF;
 }
@@ -132,16 +136,15 @@ uint16_t DAC6050x::self_test(void) {
 uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
     uint8_t result;
 
-    // Test if channel is within the range obtained from the DEVICE_ID command,
-    // read when we called the begin() function.
-    if(channel > _num_channels) {
+    // Test if channel is within the range obtained from the DEVICE_ID command.
+    // channel indexing starts at 0 so add 1 for this test.
+    if(channel+1 > _num_channels) {
         return 0xFF;
     } 
     
     // Test if the value exceeds the range allowed by the resolution obtained
     // from the DEVICE ID command read when we called the begin() function.
-    if((value > (value & (uint16_t)MSK_12_BIT_RESOLUTION)) ||
-       (value > (value & (uint16_t)MSK_14_BIT_RESOLUTION))) {
+    if(value > 4095) {
         return 0xFF;
     }
 
@@ -149,8 +152,6 @@ uint8_t DAC6050x::set_dac_output(uint16_t value, uint8_t channel) {
     _wire->begin();
     _wire->setClock(_I2Cspeed);
 
-    // Use the DAC0 command byte as the base and add the user selected 
-    // channel number to get the proper command byte .
     result = write_register((uint8_t)DAC0_DATA_CMD + channel, value);
 
     _wire->end();
