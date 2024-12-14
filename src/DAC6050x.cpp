@@ -32,6 +32,8 @@
 #define GAIN_REF_DIV_BY_2               0x0100
 #define TRIGGER_SOFT_RESET              0x000A
 
+#define CONFIG_REF_PWDWN                0x0100
+
 #define RESOLUTION_12_BIT               0x02
 #define MSK_12_BIT_RESOLUTION           0x0FFF
 #define RESOLUTION_14_BIT               0x01
@@ -102,13 +104,20 @@ uint16_t DAC6050x::setup(void) {
     _wire->begin();
     _wire->setClock(_I2Cspeed);
 
+    // disable the internal reference
+    result = write_register((uint8_t)CMD_CONFIG, (uint16_t)CONFIG_REF_PWDWN);
+
     // configure the gain
-    if(_gain == 1) {
-        result = write_register((uint8_t)GAIN_CMD,
-                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
+    if(result == 0) {
+        if(_gain == 1) {
+            result = write_register((uint8_t)GAIN_CMD,
+                        (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
+        } else {
+            result = write_register((uint8_t)GAIN_CMD,
+                        (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_2));
+        }
     } else {
-        result = write_register((uint8_t)GAIN_CMD,
-                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_2));
+        result = __LINE__;
     }
 
     if(result == 0) {
