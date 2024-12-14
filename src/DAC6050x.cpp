@@ -68,15 +68,11 @@ uint16_t DAC6050x::read_register(uint8_t command) {
 }
 
 uint16_t DAC6050x::write_register(uint8_t command, uint16_t value) {
-    // value is limited to the range of a 12 bit number but 16 bits is transmitted
-    // and the msb of the value needs to be shifted to the msb of the 16-bit command
-    // bytes
-    uint16_t temp_val = value << 4;
     _wire->setClock(_I2Cspeed);
     _wire->beginTransmission(_address);
     _wire->write(command);
-    _wire->write((uint8_t)(temp_val >> 8));
-    _wire->write((uint8_t)(temp_val & 0x00FF));
+    _wire->write((uint8_t)(value >> 8));
+    _wire->write((uint8_t)(value & 0x00FF));
     return _wire->endTransmission();
 }
 
@@ -153,13 +149,18 @@ uint8_t DAC6050x::set_dac_output(uint8_t channel, uint16_t value) {
         return 0xFF;
     }
 
+    // value is limited to the range of a 12 bit number but 16 bits is transmitted
+    // and the msb of the value needs to be shifted to the msb of the 16-bit command
+    // bytes
+    uint16_t temp_val = value << 4;
+
     // We have a good value and channel number, fire up the I2C and set it.
     _wire->begin();
     _wire->setClock(_I2Cspeed);
 
     // start with channel 0 command byte (8) and add the selected channel to
     // get the correct command byte value.
-    result = write_register((uint8_t)DAC0_DATA_CMD + channel, value);
+    result = write_register((uint8_t)DAC0_DATA_CMD + channel, temp_val);
 
     _wire->end();
     
