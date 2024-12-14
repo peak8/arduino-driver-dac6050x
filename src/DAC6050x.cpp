@@ -70,6 +70,7 @@ uint16_t DAC6050x::write_register(uint8_t command, uint16_t value) {
     // and the msb of the value needs to be shifted to the msb of the 16-bit command
     // bytes
     uint16_t temp_val = value << 4;
+    _wire->setClock(_I2Cspeed);
     _wire->beginTransmission(_address);
     _wire->write(command);
     _wire->write((uint8_t)(temp_val >> 8));
