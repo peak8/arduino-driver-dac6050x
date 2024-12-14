@@ -105,10 +105,10 @@ uint16_t DAC6050x::setup(void) {
     // configure the gain
     if(_gain == 1) {
         result = write_register((uint8_t)GAIN_CMD,
-                    (uint16_t)(GAIN_BUFF_GAIN_1));
+                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_1));
     } else {
         result = write_register((uint8_t)GAIN_CMD,
-                    (uint16_t)(GAIN_BUFF_GAIN_2));
+                    (uint16_t)(GAIN_REF_DIV_BY_2 | GAIN_BUFF_GAIN_2));
     }
 
     if(result == 0) {
