@@ -47,24 +47,26 @@ public:
     ~DAC6050x();
 
     /**
-     * @brief Starts the arduino wire libray and attempts to reset the DAC to
-     * a known state and configure it. Reads the device ID to get resolution
-     * and number of channels.
+     * @brief Starts the arduino wire libray and attempts to communicate with
+     * the device and configure it.
+     * 
+     * This class assumes the REF-DIV parameter in the gain register is enabled
+     * (divide by 2). See data sheet about VDD headroom.
      * 
      * @return 0 = success, see Wire endTransmission() doc for error codes
      */
-    uint16_t self_test(void);
+    uint16_t setup(void);
 
     /**
      * @brief Set the DAC output voltage.
      * 
+     * @param channel integer values 0 through 7
      * @param value DAC counts between the min/max of the resolution
-     * @param channel integer values 1 through 8
      * 
      * @return 0 = success, FF - parameter error, see Wire endTransmission()  
      * doc for other error codes.
      */
-    uint8_t set_dac_output(uint16_t value, uint8_t channel = 1);
+    uint8_t set_dac_output(uint8_t channel, uint16_t value);
 
     /**
      * @brief Get the device id that was read during self-test
@@ -72,7 +74,6 @@ public:
      * @return uint16_t device ID
      */
     uint16_t get_device_id(void);
-
 };
 
 #endif /* DAC6050X_H */
