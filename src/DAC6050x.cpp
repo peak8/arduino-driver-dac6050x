@@ -129,12 +129,12 @@ uint16_t DAC6050x::setup(void) {
         }
     }
 
-    if(result == 0) {
-        result = set_dac_output(0, 0x7FF0);
-    }
-    if(result == 0) {
-        result = set_dac_output(1, 0x7FF0);
-    }
+    // if(result == 0) {
+    //     result = set_dac_output(0, 0x7FF0);
+    // }
+    // if(result == 0) {
+    //     result = set_dac_output(1, 0x7FF0);
+    // }
 
     _wire->end();
     
