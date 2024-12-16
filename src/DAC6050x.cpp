@@ -116,26 +116,26 @@ uint16_t DAC6050x::setup(void) {
         result = __LINE__;
     }
 
-    // if(result == 0) {
-    //     // read the device ID register and get the resolution and number of channels.
-    //     _device_id = read_register(DEVICE_ID_CMD);
-    //     if(_device_id > 0) {
-    //         _num_channels = (uint8_t)((_device_id & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
-    //         uint8_t res = (uint8_t)((_device_id & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
-    //         if(_num_channels > 8) { result = __LINE__; }
-    //         else if(res != 2) { result = __LINE__; }
-    //     } else {
-    //         result = __LINE__;
-    //     }
-    // }
+    if(result == 0) {
+        // read the device ID register and get the resolution and number of channels.
+        _device_id = read_register(DEVICE_ID_CMD);
+        if(_device_id > 0) {
+            _num_channels = (uint8_t)((_device_id & DEVICE_ID_NUM_CHANNELS_MSK) >> DEVICE_ID_NUM_CHANNELS_SHIFT);
+            uint8_t res = (uint8_t)((_device_id & DEVICE_ID_RESOLUTION_MSK) >> DEVICE_ID_RESOLUTION_SHIFT);
+            if(_num_channels > 8) { result = __LINE__; }
+            else if(res != 2) { result = __LINE__; }
+        } else {
+            result = __LINE__;
+        }
+    }
 
     if(result == 0) {
         // result = set_dac_output(0, 0x7FF0);
         result = write_register((uint8_t)DAC0_DATA_CMD + 0, 0x7FF0);
     }
-    // if(result == 0) {
-    //     result = set_dac_output(1, 0x7FF0);
-    // }
+    if(result == 0) {
+        result = set_dac_output(1, 0x7FF0);
+    }
 
     _wire->end();
     
