@@ -133,9 +133,9 @@ uint16_t DAC6050x::setup(void) {
     if(result == 0) {
         // result = write_register((uint8_t)DAC0_DATA_CMD + 0, 0x7FF0);
         if(_num_channels == 2) {
-            result = set_dac_output(0, 0x07FF);
+            result = set_dac_output(1, 0x07FF);
         } else {
-            result = set_dac_output(0, 0x03FF);
+            result = set_dac_output(1, 0x03FF);
         }
     }
     // if(result == 0) {
