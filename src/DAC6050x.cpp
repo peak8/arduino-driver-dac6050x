@@ -166,7 +166,7 @@ uint8_t DAC6050x::set_dac_output(uint8_t channel, uint16_t value) {
     // value is limited to the range of a 12 bit number but 16 bits is transmitted
     // and the msb of the value needs to be shifted to the msb of the 16-bit command
     // bytes
-    uint16_t temp_val = value << 4;
+    // uint16_t temp_val = value << 4;
 
     // We have a good value and channel number, fire up the I2C and set it.
     _wire->begin();
@@ -174,7 +174,7 @@ uint8_t DAC6050x::set_dac_output(uint8_t channel, uint16_t value) {
 
     // start with channel 0 command byte (8) and add the selected channel to
     // get the correct command byte value.
-    result = write_register((uint8_t)DAC0_DATA_CMD + channel, temp_val);
+    result = write_register((uint8_t)DAC0_DATA_CMD + channel, value);
 
     _wire->end();
     
